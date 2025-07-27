@@ -1,0 +1,35 @@
+{% extends "lockapp/main.html" %}
+{% load static %}
+
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div style="display: flex; justify-content: center; align-items: center; height: 80vh;">
+    <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); width: 300px;">
+
+        <h2 style="text-align: center; margin-bottom: 20px;">Register</h2>
+
+        {% if messages %}
+            {% for message in messages %}
+                <p style="color: red; text-align: center;">{{ message }}</p>
+            {% endfor %}
+        {% endif %}
+
+        <form method="post" style="display: flex; flex-direction: column;">
+            {% csrf_token %}
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" required style="margin-bottom: 15px; padding: 8px;">
+
+            <label for="password1">Password:</label>
+            <input type="password" name="password1" id="password1" required style="margin-bottom: 15px; padding: 8px;">
+
+            <label for="password2">Confirm Password:</label>
+            <input type="password" name="password2" id="password2" required style="margin-bottom: 20px; padding: 8px;">
+
+            <button type="submit" style="padding: 10px; background-color: #28a745; color: white; border: none; border-radius: 5px; cursor: pointer;">Register</button>
+        </form>
+
+        <p style="margin-top: 15px; text-align: center;">Already registered? <a href="{% url 'login' %}">Login</a></p>
+    </div>
+</div>
+{% endblock %}

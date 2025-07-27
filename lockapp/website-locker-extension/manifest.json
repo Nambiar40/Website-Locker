@@ -1,0 +1,25 @@
+{
+  "manifest_version": 3,
+  "name": "Gmail Locker",
+  "version": "1.0",
+  "description": "Locks Gmail access until user logs in through Django Website Locker.",
+  "permissions": [
+    "tabs",
+    "scripting",
+    "storage",
+    "activeTab"
+  ],
+  "host_permissions": [
+    "https://mail.google.com/*",
+    "http://127.0.0.1/*"
+  ],
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["https://mail.google.com/*"],
+      "js": ["content.js"]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{% extends "lockapp/main.html" %}
+
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+    <div style="display: flex; justify-content: center; align-items: center; height: 80vh;">
+        <div style="background: white; padding: 30px; border-radius: 10px; box-shadow: 0 0 10px rgba(0,0,0,0.1); text-align: center;">
+            <h2>Welcome, {{ request.user.username }}!</h2>
+            <p>You have successfully logged in.</p>
+            <a href="{% url 'logout' %}" style="color: red; text-decoration: underline;">Logout</a>
+            
+        </div>
+    </div>
+{% endblock %}
