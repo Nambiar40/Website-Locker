@@ -29,8 +29,9 @@ def login_view(request):
 # -------------------- LOGOUT VIEW -------------------- #
 def logout_view(request):
     logout(request)
-    messages.success(request, "Logged out successfully.")
-    return redirect('login')
+    response = redirect('login')
+    response['Cache-Control'] = 'no-cache, no-store, must-revalidate'
+    return response
 
 def register_view(request):
     if request.method == 'POST':

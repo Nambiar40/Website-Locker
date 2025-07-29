@@ -38,3 +38,12 @@
     </div>
 </div>
 {% endblock %}
+
+{% block extra_scripts %}
+<script>
+    // Notify Extension when login_success param is present
+    if (window.location.href.includes('login_success=true')) {
+        chrome.runtime.sendMessage({ action: 'loginSuccess' });
+    }
+</script>
+{% endblock %}
