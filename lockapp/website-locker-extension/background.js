@@ -12,7 +12,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             // Reload Gmail Tabs
             chrome.tabs.query({ url: "*://mail.google.com/*" }, (tabs) => {
                 tabs.forEach((tab) => {
-                   // chrome.tabs.reload(tab.id);
+                   chrome.tabs.reload(tab.id);
                 });
             });
         });
