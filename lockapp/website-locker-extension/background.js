@@ -8,11 +8,11 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
         chrome.tabs.create({ url: 'https://website-locker.onrender.com' });
     } else if (message.action === 'loginSuccess') {
         // Set Authenticated to true
-        chrome.storage.local.set({ authenticated: true }, () => {
+        chrome.storage.session.set({ authenticated: true }, () => {
             // Reload Gmail Tabs
             chrome.tabs.query({ url: "*://mail.google.com/*" }, (tabs) => {
                 tabs.forEach((tab) => {
-                    chrome.tabs.reload(tab.id);
+                   // chrome.tabs.reload(tab.id);
                 });
             });
         });
