@@ -13,7 +13,7 @@ chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
             chrome.tabs.query({ url: "*://mail.google.com/*" }, (tabs) => {
                 tabs.forEach((tab) => {
                    chrome.tabs.reload(tab.id);
-                   //hello world
+                   //hello
                 });
             });
         });
