@@ -1,21 +1,24 @@
 chrome.runtime.onInstalled.addListener(() => {
-    chrome.storage.local.set({ authenticated: false });
+  chrome.storage.session.set({ authenticated: false });
 });
 
-// Open Login Tab when user clicks "Login to Unlock"
+// Listen for Messages from content.js (login success, open login tab, logout)
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
-    if (message.action === 'openLoginTab') {
-        chrome.tabs.create({ url: 'https://website-locker.onrender.com' });
-    } else if (message.action === 'loginSuccess') {
-        // Set Authenticated to true
-        chrome.storage.session.set({ authenticated: true }, () => {
-            // Reload Gmail Tabs
-            chrome.tabs.query({ url: "*://mail.google.com/*" }, (tabs) => {
-                tabs.forEach((tab) => {
-                   chrome.tabs.reload(tab.id);
-                   //hello
-                });
-            });
-        });
-    }
+
+  if (message.action === 'loginSuccess') {
+    chrome.storage.session.set({ authenticated: true }, () => {
+      console.log('User authenticated.');
+    });
+  }
+
+  if (message.action === 'logout') {
+    chrome.storage.session.set({ authenticated: false }, () => {
+      console.log('User logged out.');
+    });
+  }
+
+  if (message.action === 'openLoginTab') {
+    chrome.tabs.create({ url: "https://your-render-url/login/?next=gmail-lock" });
+  }
+
 });
