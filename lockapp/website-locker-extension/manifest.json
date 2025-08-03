@@ -10,8 +10,9 @@
     "activeTab"
   ],
   "host_permissions": [
-    "https://website-locker.onrender.com",
-    "http://127.0.0.1/*"
+    "http://127.0.0.1:8000/login",
+    
+    "https://mail.google.com/mail/u/0/"
   ],
   "background": {
     "service_worker": "background.js"

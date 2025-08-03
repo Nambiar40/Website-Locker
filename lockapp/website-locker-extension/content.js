@@ -1,3 +1,9 @@
+// ===== Gmail Locker Content Script =====
+
+// Session-based unlock flag to avoid re-locking after login
+let sessionUnlock = false;
+
+// Helper to create the lock overlay
 function lockGmail() {
   if (!document.getElementById('gmail-locker-overlay')) {
     const overlay = document.createElement('div');
@@ -23,33 +29,45 @@ function lockGmail() {
 
     document.getElementById('gmail-unlock-btn').addEventListener('click', () => {
       chrome.runtime.sendMessage({ action: 'openLoginTab' });
+      console.log('Login button clicked. Requesting openLoginTab...');
     });
   }
 }
 
+// Helper to remove the lock overlay
 function unlockGmail() {
   const overlay = document.getElementById('gmail-locker-overlay');
   if (overlay) overlay.remove();
 }
 
-// Initial Check on Page Load
+// Detect login_success param, notify background, and set session flag
+(function handleLoginSuccess() {
+  const url = new URL(window.location.href);
+  if (url.searchParams.get('login_success') === 'true') {
+    console.log("login_success detected in URL, sending loginSuccess...");
+    sessionUnlock = true; // Prevent locking in this session
+    chrome.runtime.sendMessage({ action: 'openLoginTab' }, () => {
+      // Remove login_success param from URL (no reload)
+      url.searchParams.delete('login_success');
+      window.history.replaceState({}, document.title, url.pathname + url.search);
+      console.log("login_success param removed from URL.");
+    });
+  }
+})();
+
+// Initial Authentication Check on Page Load
 chrome.storage.local.get(['authenticated'], (result) => {
-  if (!result.authenticated) {
-    console.log('Gmail Locked.');
+  console.log("Auth check on load:", result.authenticated);
+  if (!result.authenticated && !sessionUnlock) {
     lockGmail();
   } else {
-    console.log('Gmail Unlocked.');
     unlockGmail();
   }
 });
 
-// Listen for Lock/Unlock Messages from Background
+// Listen for Lock/Unlock Messages from Background Script
 chrome.runtime.onMessage.addListener((message) => {
+  console.log("Received message from background:", message);
   if (message.action === 'reLock') lockGmail();
   if (message.action === 'forceUnlock') unlockGmail();
 });
-
-// Detect login_success param and notify background
-if (window.location.href.includes('login_success=true')) {
-  chrome.runtime.sendMessage({ action: 'loginSuccess' });
-}

@@ -1,46 +1,28 @@
-chrome.runtime.onInstalled.addListener(() => {
-  chrome.storage.local.set({ authenticated: false });
-});
+// ===== Gmail Locker Background Script =====
 
+// Handle Messages from Content Script
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
   if (message.action === 'openLoginTab') {
-    chrome.tabs.create({ url: "https://website-locker.onrender.com/login/?next=gmail-lock" });
+    console.log('Opening login page...');
+    chrome.tabs.create({ url: "http://127.0.0.1:8000/login" });
   }
 
   if (message.action === 'loginSuccess') {
+    console.log('Login success received, updating storage...');
     chrome.storage.local.set({ authenticated: true }, () => {
-      console.log('Login Success Saved in Storage');
-      // Reload Gmail Tabs to Reflect Unlock
-      chrome.tabs.query({ url: "*://mail.google.com/*" }, (tabs) => {
-        tabs.forEach(tab => {
-          chrome.tabs.reload(tab.id);
-        });
-      });
-    });
-  }
+      console.log('User authenticated. Storage updated.');
 
-  if (message.action === 'logout') {
-    chrome.storage.local.set({ authenticated: false }, () => {
-      console.log('User Logged out, Locking Gmail Again.');
-      chrome.tabs.query({ url: "*://mail.google.com/*" }, (tabs) => {
-        tabs.forEach(tab => {
-          chrome.tabs.sendMessage(tab.id, { action: 'reLock' });
+      // Notify all tabs to force unlock Gmail
+      chrome.tabs.query({}, (tabs) => {
+        tabs.forEach((tab) => {
+          chrome.tabs.sendMessage(tab.id, { action: 'forceUnlock' });
         });
       });
     });
   }
 });
-// Re-check lock on Gmail tab activation
-chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
-  if (changeInfo.status === 'complete' && tab.url.includes('mail.google.com')) {
-    chrome.storage.local.get(['authenticated'], (result) => {
-      if (!result.authenticated) {
-        chrome.tabs.sendMessage(tabId, { action: 'reLock' });
-      } else {
-        chrome.tabs.sendMessage(tabId, { action: 'forceUnlock' });
-      }
-    });
-  }
-});
 
-
+// Optional: Clear authentication when browser is restarted (optional for strict security)
+// chrome.runtime.onStartup.addListener(() => {
+//   chrome.storage.local.set({ authenticated: false });
+// });
