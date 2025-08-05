@@ -2,83 +2,9 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    
     <meta charset="UTF-8">
     <title>{% block title %}Website Locker{% endblock %}</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #100632ff, #0e022dff);
-            min-height: 100vh;
-            position: relative;
-        }
-
-        .card {
-            position: relative;
-            z-index: 2;
-            background: white;
-            padding: 30px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0,0,0,0.1);
-            width: 300px;
-            margin: auto;
-            top: 50%;
-            transform: translateY(-50%);
-            text-align: center;
-        }
-
-        .button {
-            padding: 10px;
-            background-color: #e1642bff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-block;
-            margin-top: 20px;
-        }
-
-        .button:hover {
-            background-color: #3367d6;
-        }
-
-        .background-circles {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            overflow: hidden;
-            z-index: 1;
-            pointer-events: none;  /* <-- This line fixes the click blocking issue */
-        }
-
-        .background-circles span {
-            position: absolute;
-            display: block;
-            width: 100px;
-            height: 100px;
-            background: rgba(255, 255, 255, 0.2);
-            animation: float 25s linear infinite;
-            bottom: -150px;
-            border-radius: 50%;
-        }
-
-        .background-circles span:nth-child(1) { left: 10%; width: 80px; height: 80px; animation-duration: 20s; }
-        .background-circles span:nth-child(2) { left: 30%; width: 40px; height: 40px; animation-duration: 25s; }
-        .background-circles span:nth-child(3) { left: 50%; width: 60px; height: 60px; animation-duration: 18s; }
-        .background-circles span:nth-child(4) { left: 70%; width: 30px; height: 30px; animation-duration: 22s; }
-        .background-circles span:nth-child(5) { left: 90%; width: 100px; height: 100px; animation-duration: 30s; }
-
-        @keyframes float {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0.5; }
-            50% { opacity: 1; }
-            100% { transform: translateY(-1000px) rotate(360deg); opacity: 0; }
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="{% static 'style.css' %}">
 </head>
 <body>
 
